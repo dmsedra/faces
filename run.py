@@ -10,12 +10,13 @@ def main(epochs=100):
 
 	X = tf.placeholder(tf.float32, [None, 32,32])
 	Y = tf.placeholder(tf.float32, [None,2])
-	optimizer,cost,acc = model.small_model(X,Y)
+	optimizer,cost,acc,probs = model.small_conv_model(X,Y)
 
 	steps = int(np.ceil(dg.X.shape[0]/dg.batch_size)*epochs)
 	#init = tf.global_variables_initializer()
-	init = tf.initialize_all_variables()
+	init = tf.global_variables_initializer()
 
+	saver = tf.train.Saver()
 	with tf.Session() as sess:
 		sess.run(init)
 
@@ -24,16 +25,15 @@ def main(epochs=100):
 
 			#update params
 			p,c,a = sess.run([optimizer,cost,acc], feed_dict={X:X_batch, Y:Y_batch})
-			#print(c,a)
-
-			
-
+			print("Step %d Cost %f Accuracy %f"%(steps,c,a))
 			
 			#evaluate performance
 			if i%10 == 0:
 				X_eval,Y_eval = dg.eval()
-				a = sess.run([acc], feed_dict={X:X_batch, Y:Y_batch})
-				print(a)
+				eval_a = sess.run([acc], feed_dict={X:X_batch, Y:Y_batch})
+				print("Eval Accuracy %f"%eval_a[0])
+
+		#saver.save(sess, "models/small/model.ckpt")
 
 if __name__ == "__main__":
 	main()
