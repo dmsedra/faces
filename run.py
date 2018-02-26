@@ -35,7 +35,7 @@ def main(epochs=100):
 				print("Eval Accuracy %f"%eval_a[0])
 		print("Time %f"%(time.time()-s))
 
-		#saver.save(sess, "models/small/model.ckpt")
+		saver.save(sess, "models/small/model.ckpt")
 
 if __name__ == "__main__":
 	main()
